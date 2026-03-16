@@ -1,31 +1,20 @@
-import { useEffect, useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import LoginPage from './pages/auth/LoginPage'
+import RegisterPage from './pages/auth/RegisterPage'
 
-interface HealthResponse {
-  status: string
-  app: string
-}
-
-export default function App() {
-  const [health, setHealth] = useState<HealthResponse | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((res) => res.json())
-      .then(setHealth)
-      .catch(() => setError('Backend unreachable'))
-  }, [])
+function App() {
+  const hasToken = !!localStorage.getItem('finsight_token')
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      <h1 className="text-5xl font-bold text-gray-900">FinSight</h1>
-      <p className="mt-4 text-lg text-gray-500">
-        {error
-          ? error
-          : health
-          ? `${health.app} — ${health.status}`
-          : 'Checking backend...'}
-      </p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={hasToken ? <Navigate to="/" replace /> : <LoginPage />} />
+        <Route path="/register" element={hasToken ? <Navigate to="/" replace /> : <RegisterPage />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
+
+export default App

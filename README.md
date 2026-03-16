@@ -28,8 +28,19 @@ FinSight-App/
 │   └── .env.example           # env var template
 ├── frontend/
 │   ├── src/
+│   │   ├── api/
+│   │   │   ├── client.ts      # Axios instance with Bearer token interceptor
+│   │   │   └── auth.ts        # register, login, getMe, updateProfile calls
+│   │   ├── pages/
+│   │   │   └── auth/
+│   │   │       ├── LoginPage.tsx     # Two-column login page
+│   │   │       └── RegisterPage.tsx  # Two-column register page
+│   │   ├── store/
+│   │   │   └── authStore.ts   # Zustand auth state (user, token, isAuthenticated)
+│   │   ├── types/
+│   │   │   └── index.ts       # User, AuthResponse, ApiError types
 │   │   ├── main.tsx           # React entry point
-│   │   ├── App.tsx            # Root component, fetches /api/health
+│   │   ├── App.tsx            # React Router — /login, /register, / routes
 │   │   └── index.css          # Tailwind + Inter font
 │   ├── index.html
 │   ├── package.json
@@ -49,7 +60,9 @@ FinSight-App/
 | Backend  | Python, FastAPI, SQLAlchemy, pydantic-settings          |
 | Auth     | JWT (python-jose HS256), bcrypt password hashing        |
 | Database | SQLite                                                  |
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS                |
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, React Router  |
+| State    | Zustand                                                 |
+| HTTP     | Axios                                                   |
 | AI       | OpenAI API (planned)                                    |
 
 ## Getting Started
@@ -61,31 +74,64 @@ FinSight-App/
 
 ### Setup
 
-Install all dependencies in one step:
+**1. Clone and enter the repo:**
+
+```bash
+git clone <repo-url>
+cd FinSight-App
+```
+
+**2. Configure environment variables:**
+
+```bash
+cp backend/.env.example backend/.env
+# Edit backend/.env and set SECRET_KEY at minimum
+```
+
+**3. Install all dependencies:**
 
 ```bash
 make setup
 ```
+
+This creates a Python virtualenv in `backend/venv/`, installs pip packages, and runs `npm install` for the frontend.
 
 ### Running
 
 Start both servers in separate terminals:
 
 ```bash
-# Terminal 1 — backend on http://localhost:8000
+# Terminal 1 — backend API on http://localhost:8000
 make backend
 
-# Terminal 2 — frontend on http://localhost:5173
+# Terminal 2 — frontend dev server on http://localhost:5173
 make frontend
 ```
 
-### Environment Variables
+Then open [http://localhost:5173](http://localhost:5173) in your browser.
 
-Copy `.env.example` to `.env` in the `backend/` directory and fill in your values:
+- The frontend proxies all `/api/*` requests to the backend — no manual CORS setup needed in dev.
+- Interactive API docs are available at [http://localhost:8000/docs](http://localhost:8000/docs).
+
+### Manual setup (without Make)
+
+If you prefer running commands directly:
 
 ```bash
-cp backend/.env.example backend/.env
+# Backend
+cd backend
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+
+# Frontend (new terminal)
+cd frontend
+npm install
+npm run dev
 ```
+
+### Environment Variables
 
 | Variable                     | Description                    | Default                        |
 |------------------------------|--------------------------------|--------------------------------|
@@ -136,3 +182,14 @@ Interactive docs available at `http://localhost:8000/docs` when the backend is r
 - [x] `GET /api/auth/me` — returns authenticated user profile
 - [x] `PUT /api/auth/me` — updates name, currency, monthly income
 - [x] Duplicate email/username returns HTTP 409
+
+### Sprint 2 — Auth UI
+- [x] Axios client with Bearer token request interceptor and 401 redirect
+- [x] Zustand auth store — login, register, logout, fetchUser, token persistence
+- [x] `User`, `AuthResponse`, `ApiError` TypeScript types
+- [x] Login page — two-column layout (light left / dark right), email + password with show/hide toggle
+- [x] Register page — full name, email, username, password, confirm password with match validation
+- [x] Inline field validation — required fields, email format, password min 8 chars
+- [x] Loading spinner on submit, error messages on API failure
+- [x] React Router setup — `/login`, `/register`, token-aware redirects
+- [x] Responsive — right panel hidden below `md` breakpoint
