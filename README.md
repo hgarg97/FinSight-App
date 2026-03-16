@@ -1,5 +1,7 @@
 # FinSight App
 
+<img src="frontend/src/assets/logo-full.png" alt="FinSight" height="48" />
+
 AI-powered personal finance application with a Python FastAPI backend and React TypeScript frontend.
 
 ## Project Structure
@@ -193,3 +195,12 @@ Interactive docs available at `http://localhost:8000/docs` when the backend is r
 - [x] Loading spinner on submit, error messages on API failure
 - [x] React Router setup — `/login`, `/register`, token-aware redirects
 - [x] Responsive — right panel hidden below `md` breakpoint
+
+### Sprint 3 — Authenticated App Shell
+- [x] `ProtectedRoute` — token check, `fetchUser()` on load, 401 logout redirect, centered spinner
+- [x] `AppShell` — full-viewport flex layout, sticky sidebar + scrollable main content
+- [x] `Sidebar` — brand logo, 8 nav items + Settings with active state (Linear-style), user info, logout
+- [x] `TopBar` — 56px bar with dynamic page title derived from current route, notification bell
+- [x] `Logo` component — uses `logo-icon.png`; sidebar uses full `logo-full.png`
+- [x] 9 placeholder pages — Dashboard, Transactions, Budget, Trips, Net Worth, Subscriptions, Insights, AI Advisor, Settings
+- [x] Nested React Router layout — all app routes render inside `AppShell` via `<Outlet />`
