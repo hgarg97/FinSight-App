@@ -110,3 +110,43 @@ export interface Category {
   is_income: boolean
   sort_order: number
 }
+
+export interface BudgetItem {
+  id: string
+  category_id: string
+  category_name: string
+  allocated_amount: number
+  spent: number
+  remaining: number
+}
+
+export interface BudgetSummary {
+  month: number
+  year: number
+  total_income: number
+  total_budgeted: number
+  total_spent: number
+  unbudgeted_spending: number
+  items: BudgetItem[]
+}
+
+export interface BudgetSetPayload {
+  category_id: string
+  category_name: string
+  month: number
+  year: number
+  allocated_amount: number
+}
+
+export interface BudgetBulkPayload {
+  month: number
+  year: number
+  items: { category_id: string; category_name: string; allocated_amount: number }[]
+}
+
+export interface CopyBudgetsPayload {
+  from_month: number
+  from_year: number
+  to_month: number
+  to_year: number
+}
