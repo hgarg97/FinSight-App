@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Receipt, Search, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Receipt, Search, Plus, Upload, ChevronLeft, ChevronRight } from 'lucide-react'
 import { getTransactions } from '../api/transactions'
 import type { PaginatedTransactions } from '../api/transactions'
 import type { Transaction } from '../types'
 import TransactionModal from '../components/transactions/TransactionModal'
+import UploadModal from '../components/transactions/UploadModal'
 
 type TypeFilter = 'all' | 'expense' | 'income'
 
@@ -32,6 +33,7 @@ export default function TransactionsPage() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedTxn, setSelectedTxn] = useState<Transaction | null>(null)
+  const [uploadOpen, setUploadOpen] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const PER_PAGE = 50
@@ -106,13 +108,22 @@ export default function TransactionsPage() {
       {/* Page header */}
       <div className="flex items-center justify-between px-6 py-5 border-b border-[#E5E7EB]">
         <h1 className="text-lg font-semibold text-gray-900">Transactions</h1>
-        <button
-          onClick={openAdd}
-          className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium border border-[#E5E7EB] rounded-lg hover:border-[#0F9E64] hover:text-[#0F9E64] transition-colors"
-        >
-          <Plus size={14} />
-          Add transaction
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setUploadOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium border border-[#E5E7EB] rounded-lg hover:border-[#0F9E64] hover:text-[#0F9E64] transition-colors"
+          >
+            <Upload size={14} />
+            Upload
+          </button>
+          <button
+            onClick={openAdd}
+            className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium border border-[#E5E7EB] rounded-lg hover:border-[#0F9E64] hover:text-[#0F9E64] transition-colors"
+          >
+            <Plus size={14} />
+            Add transaction
+          </button>
+        </div>
       </div>
 
       {/* Filter bar */}
@@ -277,11 +288,19 @@ export default function TransactionsPage() {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Transaction modal */}
       {modalOpen && (
         <TransactionModal
           transaction={selectedTxn}
           onClose={closeModal}
+          onSuccess={fetchTransactions}
+        />
+      )}
+
+      {/* Upload modal */}
+      {uploadOpen && (
+        <UploadModal
+          onClose={() => setUploadOpen(false)}
           onSuccess={fetchTransactions}
         />
       )}

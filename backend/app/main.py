@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .database import Base, SessionLocal, engine
-from .routers import auth_router, accounts_router, categories_router, transactions_router
+from .routers import auth_router, accounts_router, categories_router, transactions_router, documents_router
 from .utils.seed_data import seed_categories
 
 
@@ -14,7 +14,7 @@ from .utils.seed_data import seed_categories
 async def lifespan(app: FastAPI):
     """Create database tables and seed default data on startup."""
     # Import all models so SQLAlchemy registers them before create_all
-    from .models import User, Account, Category, Transaction  # noqa: F401
+    from .models import User, Account, Category, Transaction, Document  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
 
@@ -41,6 +41,7 @@ app.include_router(auth_router)
 app.include_router(accounts_router)
 app.include_router(categories_router)
 app.include_router(transactions_router)
+app.include_router(documents_router)
 
 
 @app.get("/api/health")
