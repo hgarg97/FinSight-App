@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import ProtectedRoute from './routes/ProtectedRoute'
@@ -16,6 +17,14 @@ import SettingsPage from './pages/SettingsPage'
 function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: { fontSize: 13, borderRadius: 8, background: '#111', color: '#fff' },
+          success: { style: { background: '#0F9E64' } },
+          error: { style: { background: '#EF4444' } },
+        }}
+      />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
