@@ -150,3 +150,57 @@ export interface CopyBudgetsPayload {
   to_month: number
   to_year: number
 }
+
+// ── Dashboard / Insights ──────────────────────────────────────────────────────
+
+export interface DashboardMetrics {
+  monthly_income: number
+  total_spent: number
+  savings_rate: number
+  transaction_count: number
+}
+
+export interface SpendingByCategory {
+  category: string
+  amount: number
+  color: string
+}
+
+export interface SpendingTrendPoint {
+  month: string
+  year: number
+  amount: number
+}
+
+export interface DashboardTransaction {
+  id: string
+  date: string
+  merchant: string
+  amount_total: number
+  user_share_amount: number
+  category: string | null
+  transaction_type: string
+  currency: string
+}
+
+export interface BudgetStatusItem {
+  category_name: string
+  allocated: number
+  spent: number
+  color: string
+}
+
+export interface TopMerchant {
+  merchant: string
+  amount: number
+  count: number
+}
+
+export interface DashboardData {
+  metrics: DashboardMetrics
+  spending_by_category: SpendingByCategory[]
+  spending_trend: SpendingTrendPoint[]
+  recent_transactions: DashboardTransaction[]
+  budget_status: BudgetStatusItem[]
+  top_merchants: TopMerchant[]
+}

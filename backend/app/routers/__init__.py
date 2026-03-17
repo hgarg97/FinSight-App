@@ -6,6 +6,7 @@ from .budgets import router as budgets_router
 from .categories import router as categories_router
 from .transactions import router as transactions_router
 from .documents import router as documents_router
+from .insights import router as insights_router
 
 __all__ = [
     "auth_router",
@@ -14,4 +15,5 @@ __all__ = [
     "categories_router",
     "transactions_router",
     "documents_router",
+    "insights_router",
 ]
