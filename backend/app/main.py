@@ -5,14 +5,25 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .database import Base, engine
-from .routers import auth_router
+from .database import Base, SessionLocal, engine
+from .routers import auth_router, accounts_router, categories_router, transactions_router
+from .utils.seed_data import seed_categories
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Create database tables on startup."""
+    """Create database tables and seed default data on startup."""
+    # Import all models so SQLAlchemy registers them before create_all
+    from .models import User, Account, Category, Transaction  # noqa: F401
+
     Base.metadata.create_all(bind=engine)
+
+    db = SessionLocal()
+    try:
+        seed_categories(db)
+    finally:
+        db.close()
+
     yield
 
 
@@ -27,6 +38,9 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(accounts_router)
+app.include_router(categories_router)
+app.include_router(transactions_router)
 
 
 @app.get("/api/health")
